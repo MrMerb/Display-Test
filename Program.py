@@ -11,6 +11,20 @@ device = ssd1306(serial)
 # Load a font (you can replace this with a TTF font if desired)
 font = ImageFont.load_default()
 
+import time
+
+def get_fan_speed():
+    # The typical path for the active cooler fan speed on Raspberry Pi 5
+    # The 'hwmon2' part might change, so list the content of 'hwmon' if it doesn't work
+    try:
+        with open("/sys/devices/platform/cooling_fan/hwmon/hwmon2/fan1_input", "r") as f:
+            speed = f.read().strip()
+            return f"Fan Speed: {speed} RPM"
+    except FileNotFoundError:
+        return "Fan speed file not found. Ensure the fan is connected and detected, or check the correct path in /sys/devices/platform/cooling_fan/hwmon/"
+    except Exception as e:
+        return f"An error occurred: {e}"
+
 def display_time():
     while True:
         # Create a blank image for drawing
@@ -30,6 +44,10 @@ def display_time():
             
             # Draw the time on the display
             draw.text((x, y), current_time, font=font, fill=255)
+
+            #Draw the fan speed on the display
+            fan_speed = get_fan_speed()
+            draw.text((x, y + 20), fan_speed, font=font, fill=255)
             
             # Display the image
             device.display(image)
