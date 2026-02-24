@@ -123,13 +123,16 @@ class ButtonCycle(StateMachine):
 sm = ButtonCycle()
 
 async def main():
+    print("Starting program...")
     while True:
+        print("starting button loop")
         task1 = asyncio.create_task(check_button())
+        print("starting display loop")
         if sm.current_state == sm.Info:
             task2 = asyncio.create_task(display_time())
         elif sm.current_state == sm.Joystick:
             task2 = asyncio.create_task(display_joystick())
-            
+
 
 if __name__ == "__main__":
     asyncio.run(main())
