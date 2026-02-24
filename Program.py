@@ -17,7 +17,7 @@ def get_fan_speed():
     # The typical path for the active cooler fan speed on Raspberry Pi 5
     # The 'hwmon2' part might change, so list the content of 'hwmon' if it doesn't work
     try:
-        with open("/sys/devices/platform/cooling_fan/hwmon/hwmon2/fan1_input", "r") as f:
+        with open("/sys/devices/platform/cooling_fan/hwmon/hwmon1/fan1_input", "r") as f:
             speed = f.read().strip()
             return f"Fan Speed: {speed} RPM"
     except FileNotFoundError:
