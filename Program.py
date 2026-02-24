@@ -20,10 +20,13 @@ def display_time():
             # Get the current time
             current_time = datetime.now().strftime("%H:%M:%S")
             
-            # Calculate text size and position
-            text_width, text_height = draw.text(current_time, font=font)
-            x = (device.width - text_width) // 2
-            y = (device.height - text_height) // 2
+            # # Calculate text size and position
+            # text_width, text_height = draw.textsize(current_time, font=font)
+            # x = (device.width - text_width) // 2
+            # y = (device.height - text_height) // 2
+
+            x=5
+            y=5
             
             # Draw the time on the display
             draw.text((x, y), current_time, font=font, fill=255)
