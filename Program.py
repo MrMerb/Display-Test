@@ -3,6 +3,9 @@ from luma.oled.device import ssd1306
 from PIL import ImageDraw, ImageFont, Image
 from time import sleep
 from datetime import datetime
+import RPi.GPIO as GPIO
+from statemachine import StateMachine, State
+import asyncio
 
 # Initialize the I2C interface and the SSD1306 OLED display
 serial = i2c(port=1, address=0x3C)
@@ -33,8 +36,8 @@ def get_fan_speed():
     except Exception as e:
         return f"An error occurred: {e}"
 
-def display_time():
-    while True:
+async def display_time():
+    while sm.current_state == sm.Info:
         # Create a blank image for drawing
         with Image.new("1", (device.width, device.height)) as image:
             draw = ImageDraw.Draw(image)
@@ -65,10 +68,64 @@ def display_time():
             device.display(image)
         
         # Update every second
-        sleep(1)
+        await asyncio.sleep(1)
+
+async def display_joystick():
+    while sm.current_state == sm.Joystick:
+        # Create a blank image for drawing
+        with Image.new("1", (device.width, device.height)) as image:
+            draw = ImageDraw.Draw(image)
+            
+            # Display joystick information (placeholder)
+            joystick_info = "Joystick Mode: Active"
+            draw.text((5, 5), joystick_info, font=font, fill=255)
+            
+            # Display the image
+            device.display(image)
+        
+        # Update every second
+        await asyncio.sleep(1)
+
+# Cecking button condition to switch modes
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set GPIO pin 2 (BCM) as input with internal pull-up resistor
+
+async def check_button():
+    while True:
+        if GPIO.input(2) == GPIO.HIGH:  # Check if the button is pressed
+            print("Button Pressed!")
+            # Here you can add code to switch modes or perform any action when the button is pressed
+        await asyncio.sleep(0.1)  # Check every 100ms
+#Setting up state machine
+
+
+class ButtonCycle(StateMachine):
+    "Controll Info cycle"
+    Info = State(initial=True)
+    Joystick = State()
+
+    cycle = (
+        Info.to(Joystick)
+        | Joystick.to(Info)
+    )
+
+    def before_cycle(self, event: str, source: State, target: State, message: str = ""):
+        message = ". " + message if message else ""
+        return f"Running {event} from {source.id} to {target.id}{message}"
+
+    def on_enter_Joystick(self):
+        print("Joystick has controll.")
+
+
+    def on_exit_Joystick(self):
+        print("Joystick has released control.")
+
+sm = ButtonCycle()
+
+async def main():
+    while True:
+        task1 = asyncio.create_task(check_button())
+        await task1
 
 if __name__ == "__main__":
-    try:
-        display_time()
-    except KeyboardInterrupt:
-        pass
+    asyncio.run(main())
