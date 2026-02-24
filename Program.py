@@ -11,7 +11,11 @@ device = ssd1306(serial)
 # Load a font (you can replace this with a TTF font if desired)
 font = ImageFont.load_default()
 
-import time
+from gpiozero import CPUTemperature
+cpu = CPUTemperature()
+
+def get_cpu_temperature():
+    return f"CPU Temperature: {cpu.temperature}°C"
 
 def get_fan_speed():
     # The typical path for the active cooler fan speed on Raspberry Pi 5
@@ -48,6 +52,10 @@ def display_time():
             #Draw the fan speed on the display
             fan_speed = get_fan_speed()
             draw.text((x, y + 20), fan_speed, font=font, fill=255)
+
+            #Draw the CPU temperature on the display
+            cpu_temp = get_cpu_temperature()
+            draw.text((x, y + 40), cpu_temp, font=font, fill=255)
             
             # Display the image
             device.display(image)
