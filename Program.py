@@ -3,7 +3,7 @@ from luma.oled.device import ssd1306
 from PIL import ImageDraw, ImageFont, Image
 from time import sleep
 from datetime import datetime
-import RPi.GPIO as GPIO
+from gpiozero import Button
 from statemachine import StateMachine, State
 import asyncio
 
@@ -87,12 +87,12 @@ async def display_joystick():
         await asyncio.sleep(1)
 
 # Cecking button condition to switch modes
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set GPIO pin 2 (BCM) as input with internal pull-up resistor
+Joystick_button = Button(17, pull_up=False)  # GPIO pin 17 for the button
 
 async def check_button():
     while True:
-        if GPIO.input(2) == GPIO.HIGH:  # Check if the button is pressed
+        if Joystick_button.is_pressed:
+            sm.cycle()  # Switch between Info and Joystick states
             print("Button Pressed!")
             # Here you can add code to switch modes or perform any action when the button is pressed
         await asyncio.sleep(0.1)  # Check every 100ms
