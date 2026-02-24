@@ -11,11 +11,15 @@ device = ssd1306(serial)
 # Load a font (you can replace this with a TTF font if desired)
 font = ImageFont.load_default()
 
-from gpiozero import CPUTemperature
-cpu = CPUTemperature()
-
 def get_cpu_temperature():
-    return f"CPU Temperature: {cpu.temperature}°C"
+    try:
+        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+            temp = f.read().strip()
+            return f"CPU Temp: {temp} °C"
+    except FileNotFoundError:
+        return "CPU temperature file not found. Ensure the system is properly configured."
+    except Exception as e:
+        return f"An error occurred: {e}"
 
 def get_fan_speed():
     # The typical path for the active cooler fan speed on Raspberry Pi 5
