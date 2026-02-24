@@ -21,7 +21,7 @@ def display_time():
             current_time = datetime.now().strftime("%H:%M:%S")
             
             # Calculate text size and position
-            text_width, text_height = draw.textsize(current_time, font=font)
+            text_width, text_height = draw.text(current_time, font=font)
             x = (device.width - text_width) // 2
             y = (device.height - text_height) // 2
             
