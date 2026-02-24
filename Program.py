@@ -98,6 +98,11 @@ async def check_button():
         await asyncio.sleep(0.1)  # Check every 100ms
 #Setting up state machine
 
+async def status_reporter():
+    while True:
+        print(f"Current State: {sm.current_state}")
+        await asyncio.sleep(3)  # Report status every 3 seconds
+
 
 class ButtonCycle(StateMachine):
     "Controll Info cycle"
@@ -124,14 +129,14 @@ sm = ButtonCycle()
 
 async def main():
     print("Starting program...")
+    print("starting button loop")
+    task1 = asyncio.create_task(check_button())
     while True:
-        print("starting button loop")
-        task1 = asyncio.create_task(check_button())
-        print("starting display loop")
         if sm.current_state == sm.Info:
-            task2 = asyncio.create_task(display_time())
+            display_time()
         elif sm.current_state == sm.Joystick:
-            task2 = asyncio.create_task(display_joystick())
+            display_joystick()
+        await asyncio.sleep(0.5)  # Main loop delay
 
 
 if __name__ == "__main__":
