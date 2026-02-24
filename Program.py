@@ -15,7 +15,7 @@ def get_cpu_temperature():
     try:
         with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
             temp = f.read().strip()
-            return f"CPU Temp: {temp} °C"
+            return f"CPU Temp: {int(temp)/1000:.1f} °C"
     except FileNotFoundError:
         return "CPU temperature file not found. Ensure the system is properly configured."
     except Exception as e:
