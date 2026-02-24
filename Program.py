@@ -125,7 +125,11 @@ sm = ButtonCycle()
 async def main():
     while True:
         task1 = asyncio.create_task(check_button())
-        await task1
+        if sm.current_state == sm.Info:
+            task2 = asyncio.create_task(display_time())
+        elif sm.current_state == sm.Joystick:
+            task2 = asyncio.create_task(display_joystick())
+            
 
 if __name__ == "__main__":
     asyncio.run(main())
