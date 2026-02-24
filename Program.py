@@ -105,7 +105,7 @@ async def status_reporter():
 
 
 class ButtonCycle(StateMachine):
-    "Controll Info cycle"
+    "Control Info cycle"
     Info = State(initial=True)
     Joystick = State()
 
@@ -140,4 +140,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    print("Program started.")
     asyncio.run(main())
