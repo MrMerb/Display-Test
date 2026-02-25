@@ -83,8 +83,8 @@ async def display_joystick():
             # Display the image
             device.display(image)
         
-        # Update every second
-        await asyncio.sleep(1)
+        # Update every 100ms
+        await asyncio.sleep(.1)
 
 # Cecking button condition to switch modes
 Joystick_button = Button(17, pull_up=False)  # GPIO pin 17 for the button
@@ -139,7 +139,6 @@ async def main():
             display_joystick()
             await display_joystick()  # Run the joystick display loop
         await asyncio.sleep(0.5)  # Main loop delay
-
 
 if __name__ == "__main__":
     print("Program started.")
