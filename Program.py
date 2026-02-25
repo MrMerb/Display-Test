@@ -81,8 +81,8 @@ async def display_joystick():
             joystick_info = "Joystick Mode: Active"
             draw.text((5, 5), joystick_info, font=font, fill=255)
             
-            x_value = ADS.read_adc(0, gain=1)  # Read from channel 0 (adjust as needed)
-            y_value = ADS.read_adc(1, gain=1)  # Read from channel 1 (adjust as needed)
+            x_value = ADS.read_adc(0)  # Read from channel 0 (adjust as needed)
+            y_value = ADS.read_adc(1)  # Read from channel 1 (adjust as needed)
 
             print(f"Joystick X: {x_value}, Y: {y_value}")
             #draw.point((x_value // 256, y_value // 256), fill=255)  # Scale down for display
