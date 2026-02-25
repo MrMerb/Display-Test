@@ -134,8 +134,10 @@ async def main():
     while True:
         if sm.current_state == sm.Info:
             display_time()
+            await display_time()  # Run the time display loop
         elif sm.current_state == sm.Joystick:
             display_joystick()
+            await display_joystick()  # Run the joystick display loop
         await asyncio.sleep(0.5)  # Main loop delay
 
 
