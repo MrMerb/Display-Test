@@ -94,7 +94,7 @@ async def display_joystick():
         await asyncio.sleep(.1)
 
 # Cecking button condition to switch modes
-Joystick_button = Button(17, pull_up=False)  # GPIO pin 17 for the button
+Joystick_button = Button(17, pull_up=True)  # GPIO pin 17 for the button
 
 async def check_button():
     while True:
@@ -140,6 +140,7 @@ async def main():
     print("Starting program...")
     print("starting button loop")
     task1 = asyncio.create_task(check_button())
+    task2 = asyncio.create_task(status_reporter())
     while True:
         if sm.current_state == sm.Info:
             display_time()
