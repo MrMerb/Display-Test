@@ -6,6 +6,7 @@ from datetime import datetime
 from gpiozero import Button
 from statemachine import StateMachine, State
 import asyncio
+import ADS1x15
 
 # Initialize the I2C interface and the SSD1306 OLED display
 serial = i2c(port=1, address=0x3C)
@@ -80,6 +81,12 @@ async def display_joystick():
             joystick_info = "Joystick Mode: Active"
             draw.text((5, 5), joystick_info, font=font, fill=255)
             
+            x_value = ADS.read_adc(0, gain=1)  # Read from channel 0 (adjust as needed)
+            y_value = ADS.read_adc(1, gain=1)  # Read from channel 1 (adjust as needed)
+
+            print(f"Joystick X: {x_value}, Y: {y_value}")
+            #draw.point((x_value // 256, y_value // 256), fill=255)  # Scale down for display
+
             # Display the image
             device.display(image)
         
@@ -97,6 +104,8 @@ async def check_button():
             # Here you can add code to switch modes or perform any action when the button is pressed
         await asyncio.sleep(0.1)  # Check every 100ms
 #Setting up state machine
+
+ADS = ADS1x15.ADS1115(1)  # Create an instance of the ADS1115 ADC
 
 async def status_reporter():
     while True:
