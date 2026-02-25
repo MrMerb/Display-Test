@@ -105,7 +105,7 @@ async def check_button():
         await asyncio.sleep(0.1)  # Check every 100ms
 #Setting up state machine
 
-ADS = ADS1x15.ADS1115(1)  # Create an instance of the ADS1115 ADC
+ADS = ADS1x15.ADS1115(1,0x48)  # Create an instance of the ADS1115 ADC
 
 async def status_reporter():
     while True:
