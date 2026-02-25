@@ -71,6 +71,19 @@ async def display_time():
         # Update every second
         await asyncio.sleep(1)
 
+def customADCgain(value, dir):
+    if dir == "x":
+        if value <= 27377:
+            return value/27377-1
+        else:
+            return (value-27377)/5391
+    elif dir == "y":
+        if value <= 26420:
+            return value/26420-1
+        else:
+            return (value-26420)/6340
+    
+
 async def display_joystick():
     while sm.current_state == sm.Joystick:
         # Create a blank image for drawing
@@ -81,11 +94,11 @@ async def display_joystick():
             joystick_info = "Joystick Mode: Active"
             draw.text((5, 5), joystick_info, font=font, fill=255)
             
-            x_value = ADS.readADC(0)  # Read from channel 0 (adjust as needed)
-            y_value = ADS.readADC(1)  # Read from channel 1 (adjust as needed)
+            x_value = customADCgain(ADS.readADC(0), "x")  # Read from channel 0 (adjust as needed)
+            y_value = customADCgain(ADS.readADC(1), "y")  # Read from channel 1 (adjust as needed)
 
             print(f"Joystick X: {x_value}, Y: {y_value}")
-            draw.point((x_value // 256, (y_value // 820) + 20), fill=255)  # Scale down for display
+            draw.point((((x_value+1) *64//1), (y_value+1)*26//1), fill=255)  # Scale down for display
 
             # Display the image
             device.display(image)
